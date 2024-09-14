@@ -23,20 +23,23 @@ const Button = ({ handleClick, text }) => (
 )
 
 const App = () => {
-  const [left, setLeft] = useState(0)
-  const [right, setRight] = useState(0)
-  const [allClicks, setAll] = useState([])
+  // estos están bien
+  const [age, setAge] = useState(0)
+  const [name, setName] = useState('Juha Tauriainen')
 
-  const handleLeftClick = () => {
-    setAll(allClicks.concat('L'))
-    const updatedLeft = left + 1
-    setLeft(updatedLeft)
+  if ( age > 10 ) {
+    // esto no funciona!
+    const [foobar, setFoobar] = useState(null)
   }
 
-  const handleRightClick = () => {
-    setAll(allClicks.concat('R'))
-    const updatedRight = right + 1
-    setRight(updatedRight)
+  for ( let i = 0; i < age; i++ ) {
+    // esto tampoco está bien
+    const [rightWay, setRightWay] = useState(false)
+  }
+
+  const notGood = () => {
+    // y esto también es ilegal
+    const [x, setX] = useState(-1000)
   }
 
   return (
