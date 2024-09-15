@@ -10,31 +10,38 @@ const AllStatistics = (props) => {
   if (show) {
     return (
       <>
-        <br />
-        <span>Total comments: {props.totalComments}</span>
-        <br />
-        <span>Average comments: {props.avgComments}</span>
-        <br />
-        <span>Positive comments: {props.positiveComments}</span>
+        <tr>
+          <td>
+            Total comments: {props.totalComments}
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            Average comments: {props.avgComments}
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            Positive comments: {props.positiveComments}
+          </td>
+        </tr>
       </>
     )
   }
 
   return (
     <>
-      <br />
-      <span>No feedback given</span>
+      <tr>
+        <td>No feedback given</td>
+      </tr>
     </>
   )
 }
 
 const StatisticsLine = ({ text, feedback }) => {
-  return (
-    <>
-      <span>{text} feedback: {feedback}</span>
-      <br />
-    </>
-  )
+  return <span>{text} feedback: {feedback}</span>
 }
 
 const Button = ({ text, event }) => {
@@ -78,16 +85,31 @@ const App = () => {
 
       <CustomTitle text="Statistics"/>
 
-      <StatisticsLine text="Good" feedback={feedback.good}/>
-      <StatisticsLine text="Neutral" feedback={feedback.neutral}/>
-      <StatisticsLine text="Bad" feedback={feedback.bad}/>
-
-      <AllStatistics
-        feedback={feedback}
-        totalComments={totalComments()}
-        avgComments={avgComments()}
-        positiveComments={feedback.good}
-      />
+      <table>
+        <thead>
+          <tr>
+            <td>
+              <StatisticsLine text="Good" feedback={feedback.good} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <StatisticsLine text="Neutral" feedback={feedback.neutral} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <StatisticsLine text="Bad" feedback={feedback.bad} />
+            </td>
+          </tr>
+          <AllStatistics
+            feedback={feedback}
+            totalComments={totalComments()}
+            avgComments={avgComments()}
+            positiveComments={feedback.good}
+          />
+        </thead>
+      </table>
     </>
   )
 }
