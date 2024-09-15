@@ -4,7 +4,7 @@ const CustomTitle = ({ text }) => {
   return <h1>{text}</h1>
 }
 
-const Statistics = ({feedback, text, feedbackType}) => {
+const Statistics = ({ feedback, text, feedbackType }) => {
   switch (feedbackType) {
     case 'good':
       return (
@@ -29,6 +29,14 @@ const Statistics = ({feedback, text, feedbackType}) => {
   }
 }
 
+const MoreStatistic = ({ text, calc }) => {
+  return (
+    <>
+      <span>{text} {calc}</span>
+    </>
+  )
+}
+
 const App = () => {
   const [feedback, setFeedback] = useState({
     good: 0,
@@ -44,6 +52,14 @@ const App = () => {
 
   const handleBadFeedback = () =>
     setFeedback({ ...feedback, bad: feedback.bad + 1 })
+
+  const totalComments = () => {
+    return feedback.good + feedback.neutral + feedback.bad
+  }
+
+  const avgComments = () => {
+    return totalComments() / 3
+  }
 
   return (
     <>
@@ -61,6 +77,15 @@ const App = () => {
       <Statistics text="Good feedback:" feedback={feedback} feedbackType="good" />
       <Statistics text="Neutral feedback:" feedback={feedback} feedbackType="neutral" />
       <Statistics text="Bad feedback:" feedback={feedback} feedbackType="bad" />
+
+      <br />
+      <br />
+
+      <MoreStatistic text="All comments:" calc={totalComments()}/>
+      <br />
+      <MoreStatistic text="Average comments:" calc={avgComments()}/>
+      <br />
+      <MoreStatistic text="Positive comments:" calc={feedback.good}/>
     </>
   )
 }
