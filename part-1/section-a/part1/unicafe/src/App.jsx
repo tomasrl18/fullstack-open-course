@@ -10,15 +10,7 @@ const AllStatistics = (props) => {
   if (show) {
     return (
       <>
-        <span>Good feedback: {props.feedback.good}</span>
         <br />
-        <span>Neutral feedback: {props.feedback.neutral}</span>
-        <br />
-        <span>Bad feedback: {props.feedback.bad}</span>
-  
-        <br />
-        <br />
-  
         <span>Total comments: {props.totalComments}</span>
         <br />
         <span>Average comments: {props.avgComments}</span>
@@ -28,7 +20,25 @@ const AllStatistics = (props) => {
     )
   }
 
-  return <span>No feedback given</span>
+  return (
+    <>
+      <br />
+      <span>No feedback given</span>
+    </>
+  )
+}
+
+const StatisticsLine = ({ text, feedback }) => {
+  return (
+    <>
+      <span>{text} feedback: {feedback}</span>
+      <br />
+    </>
+  )
+}
+
+const Button = ({ text, event }) => {
+  return <button onClick={event}>{text}</button>
 }
 
 const App = () => {
@@ -58,15 +68,19 @@ const App = () => {
   return (
     <>
       <CustomTitle text="Give Feedback" />
+
+      <Button text="Good" event={handleGoodFeedback} />
+      <Button text="Neutral" event={handleNeutralFeedback} />
+      <Button text="Bad" event={handleBadFeedback} />
      
-      <button onClick={handleGoodFeedback}>Good</button>
-      <button onClick={handleNeutralFeedback}>Neutral</button>
-      <button onClick={handleBadFeedback}>Bad</button>
-      
       <br />
       <br />
 
       <CustomTitle text="Statistics"/>
+
+      <StatisticsLine text="Good" feedback={feedback.good}/>
+      <StatisticsLine text="Neutral" feedback={feedback.neutral}/>
+      <StatisticsLine text="Bad" feedback={feedback.bad}/>
 
       <AllStatistics
         feedback={feedback}
