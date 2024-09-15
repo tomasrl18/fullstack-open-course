@@ -5,26 +5,30 @@ const CustomTitle = ({ text }) => {
 }
 
 const AllStatistics = (props) => {
-  console.log(props);
+  const show = props.totalComments == 0 ? false : true
+  
+  if (show) {
+    return (
+      <>
+        <span>Good feedback: {props.feedback.good}</span>
+        <br />
+        <span>Neutral feedback: {props.feedback.neutral}</span>
+        <br />
+        <span>Bad feedback: {props.feedback.bad}</span>
+  
+        <br />
+        <br />
+  
+        <span>Total comments: {props.totalComments}</span>
+        <br />
+        <span>Average comments: {props.avgComments}</span>
+        <br />
+        <span>Positive comments: {props.positiveComments}</span>
+      </>
+    )
+  }
 
-  return (
-    <>
-      <span>Good feedback: {props.feedback.good}</span>
-      <br />
-      <span>Neutral feedback: {props.feedback.neutral}</span>
-      <br />
-      <span>Bad feedback: {props.feedback.bad}</span>
-
-      <br />
-      <br />
-
-      <span>Total comments: {props.totalComments}</span>
-      <br />
-      <span>Average comments: {props.avgComments}</span>
-      <br />
-      <span>Positive comments: {props.positiveComments}</span>
-    </>
-  )
+  return <span>No feedback given</span>
 }
 
 const App = () => {
