@@ -13,21 +13,23 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState(0)
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
   const handleSelectedAnecdote = () => {
-    setVotes(0)
     let randomIndex = getRandomIndex(anecdotes)
     
     setSelected(randomIndex)
   }
 
-  const increaseVotesByOne = () => setVotes(votes + 1)
+  const increaseVotesByOne = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
 
   const getRandomIndex = (anecdotes) => {
     return Math.floor(Math.random() * anecdotes.length)
   }
-
 
   return (
     <div>
@@ -38,7 +40,7 @@ const App = () => {
       <br />
 
       <span>
-        This anecdote has {votes} votes
+        This anecdote has {votes[selected]} votes
       </span>
 
       <br />
