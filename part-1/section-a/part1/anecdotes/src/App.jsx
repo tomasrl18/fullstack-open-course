@@ -1,5 +1,9 @@
 import { useState } from 'react'
 
+const CustomTitle = ({ text }) => {
+  return <h1>{text}</h1>
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -31,8 +35,21 @@ const App = () => {
     return Math.floor(Math.random() * anecdotes.length)
   }
 
+  const getMostVotedAnecdote = () => {
+    const maxVotes = Math.max(...votes)
+    const mostVotedIndex = votes.indexOf(maxVotes)
+    return {
+      anecdote: anecdotes[mostVotedIndex],
+      votes: maxVotes
+    }
+  }
+
+  const mostVoted = getMostVotedAnecdote()
+
   return (
     <div>
+      <CustomTitle text="Anecdote of the day"/>
+
       <span>
         {anecdotes[selected]}
       </span>
@@ -48,6 +65,20 @@ const App = () => {
 
       <button onClick={increaseVotesByOne}>Vote</button>
       <button onClick={handleSelectedAnecdote}>A random anecdote</button>
+      <br />
+
+      <CustomTitle text="MVA (Most Value Anecdote)"/>
+      <h3>
+        The MVA is:
+      </h3>
+
+      <p>
+        {mostVoted.anecdote}
+      </p>
+
+      <p>
+        This anecdote has {mostVoted.votes} votes
+      </p>
     </div>
   )
 }
