@@ -2,16 +2,10 @@ const Course = ({ course }) => {
   const parts = course.parts
   
   function getTotalExercises() {
-    let total = 0;
-
-    parts.forEach(part => {
-      total += part.exercises
-    });
-
-    return total;
+    return parts.reduce((total, part) => total + part.exercises, 0)
   }
 
-  let totalExercises = getTotalExercises()
+  const totalExercises = getTotalExercises()
   
   return (
     <>
