@@ -4,13 +4,15 @@ const App = () => {
   const [persons, setPersons] = useState([
     {
       id: 1,
-      name: 'Arto Hellas'
+      name: 'Arto Hellas',
+      phoneNumber: 123456789
     }
-  ]) 
+  ])
   const [newName, setNewName] = useState('')
+  const [newPhoneNumber, setNewPhoneNumber] = useState('')
 
   const isNameGiven = (newName) => {
-    return persons.some(person => person.name === newName)
+    return persons.some(person => person.name.toLowerCase() == newName.toLowerCase())
   }
 
   const addName = (event) => {
@@ -19,20 +21,27 @@ const App = () => {
     if (isNameGiven(newName)) {
       alert(`${newName} is already added on the phonebook`)
       setNewName('')
+      setNewPhoneNumber('')
       return
     } 
 
-    const name = {
+    const person = {
       id: persons.length + 1,
-      name: newName
+      name: newName,
+      phoneNumber: newPhoneNumber
     }
 
-    setPersons(persons.concat(name))
+    setPersons(persons.concat(person))
     setNewName('')
+    setNewPhoneNumber('')
   }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
+  }
+
+  const handlePhoneNumberChange = (event) => {
+    setNewPhoneNumber(event.target.value)
   }
 
   return (
@@ -42,6 +51,9 @@ const App = () => {
         <div>
           Name: <input value={newName} onChange={handleNameChange}/>
         </div>
+        <div>
+          Phone number: <input value={newPhoneNumber} onChange={handlePhoneNumberChange} />
+        </div>
         <div style={{marginTop: '1rem'}}>
           <button type="submit">Add</button>
         </div>
@@ -49,7 +61,7 @@ const App = () => {
       <h2>Numbers</h2>
       {persons.map(person => 
         <p key={person.id}>
-          {person.name}
+          <strong>Name:</strong> {person.name} <strong>Phone number:</strong>{person.phoneNumber}
         </p>
       )}
     </div>
