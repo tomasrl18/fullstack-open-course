@@ -9,8 +9,18 @@ const App = () => {
   ]) 
   const [newName, setNewName] = useState('')
 
+  const isNameGiven = (newName) => {
+    return persons.some(person => person.name === newName)
+  }
+
   const addName = (event) => {
     event.preventDefault()
+
+    if (isNameGiven(newName)) {
+      alert(`${newName} is already added on the phonebook`)
+      setNewName('')
+      return
+    } 
 
     const name = {
       id: persons.length + 1,
