@@ -61,6 +61,10 @@ const App = () => {
     setShow(event.target.value)
   }
 
+  const handleDelete = (id) => {
+    setPersons(persons.filter(person => person.id !== id));
+  }
+
   const numbersToShow = !show
     ? persons
     : persons.filter(person => person.name.toLowerCase().includes(show.toLowerCase()))
@@ -83,7 +87,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons numbersToShow={numbersToShow}/>
+      <Persons numbersToShow={numbersToShow} onDelete={handleDelete} />
     </div>
   )
 }
