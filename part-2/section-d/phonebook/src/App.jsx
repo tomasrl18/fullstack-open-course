@@ -20,24 +20,50 @@ const App = () => {
       })
   }, [])
 
-  const isNameGiven = (newName) => {
+  const isNameInDB = (newName) => {
     return persons.some(person => person.name.toLowerCase() == newName.toLowerCase())
+  }
+
+  const isPhoneInDB = (newPhone) => {
+    return persons.some(person => person.number == newPhone)
+  }
+
+  const editPhoneNumber = () => {
+    const person = persons.find(person => person.name === newName)
+    const changedPerson = { ...person, number: newPhoneNumber }
+
+    personService
+      .update(changedPerson.id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
+        setNewName('')
+        setNewPhoneNumber('')
+      })
   }
 
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (isNameGiven(newName)) {
+    if (isNameInDB(newName) && isPhoneInDB(newPhoneNumber)) {
       alert(`${newName} is already added on the phonebook`)
       setNewName('')
       setNewPhoneNumber('')
       return
-    } 
+    }
+
+    if (isNameInDB(newName) && !isPhoneInDB(newPhoneNumber)) {
+      let res = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`);
+
+      if (res) {
+        editPhoneNumber()
+
+        return
+      }
+    }
 
     const person = {
-      id: persons.length + 1,
       name: newName,
-      number: newPhoneNumber
+      number: newPhoneNumber,
     }
 
     personService
