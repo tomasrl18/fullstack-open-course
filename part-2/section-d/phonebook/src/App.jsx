@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import axios from 'axios'
+import personService from './services/persons'
 
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
@@ -13,10 +13,10 @@ const App = () => {
   const [show, setShow] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
 
@@ -40,10 +40,10 @@ const App = () => {
       number: newPhoneNumber
     }
 
-    axios
-      .post('http://localhost:3001/persons', person)
-      .then(res => {
-        setPersons(persons.concat(res.data))
+    personService
+      .create(person)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewPhoneNumber('')
       })
