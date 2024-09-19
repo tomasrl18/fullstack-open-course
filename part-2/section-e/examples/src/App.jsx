@@ -21,9 +21,14 @@ const Footer = () => {
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState()
+  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState('some error happened...')
+  const [message, setMessage] = useState([
+    {
+      message: '',
+      type: ''
+    }
+  ])
 
   useEffect(() => {
     noteService
@@ -47,6 +52,25 @@ const App = () => {
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
         setNewNote('')
+
+        const newMessage = {
+          message: `Added "${note.content}"`,
+          type: 'success'
+        }
+
+        setMessage(newMessage)
+
+        removeMessage()
+      })
+      .catch(error => {
+        const newMessage = {
+          message: 'An error occurred while adding the note',
+          type: 'error'
+        }
+
+        setMessage(newMessage)
+
+        removeMessage()
       })
   }
 
@@ -58,20 +82,43 @@ const App = () => {
       .update(id, changedNote)
       .then(returnedNote => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+
+        const newMessage = {
+          message: `Changed importance of "${note.content}"`,
+          type: 'success'
+        }
+
+        setMessage(newMessage)
+
+        removeMessage()
       })
       .catch(error => {
-        setErrorMessage(
-          `The note "${note.content}" was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
         setNotes(notes.filter(n => n.id !== id))
+
+        const newMessage = {
+          message: `The note "${note.content}" was already removed from server`,
+          type: 'error'
+        }
+
+        setMessage(newMessage)
+
+        removeMessage()
       })
   }
 
   const handleNoteChange = (event) => {
     setNewNote(event.target.value)
+  }
+
+  const removeMessage = () => {
+    setTimeout(() => {
+      setMessage([
+        {
+          message: '',
+          type: ''
+        }
+      ])
+    }, 5000)
   }
 
   const notesToShow = showAll
@@ -81,7 +128,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      <Notification message={message.message} type={message.type}/>
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           Show {showAll ? 'important' : 'all' }

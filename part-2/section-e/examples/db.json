@@ -13,7 +13,22 @@
     {
       "id": "3",
       "content": "GET and POST are the most important methods of HTTP protocol",
+      "important": true
+    },
+    {
+      "id": 4,
+      "content": "a",
+      "important": true
+    },
+    {
+      "id": 5,
+      "content": "b",
       "important": false
+    },
+    {
+      "id": 6,
+      "content": "c",
+      "important": true
     }
   ]
 }
