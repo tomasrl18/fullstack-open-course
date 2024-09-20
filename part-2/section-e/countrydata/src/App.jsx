@@ -5,6 +5,7 @@ import countriesService from "./services/countries"
 function App() {
   const [countries, setCountries] = useState([])
   const [showedCountries, setShowedCountries] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     countriesService
@@ -16,7 +17,12 @@ function App() {
   
   const handleShowedCountries = (event) => {
     setShowedCountries(event.target.value)
+    setSelectedCountry(null);
   }
+
+  const handleShowDetails = (country) => {
+    setSelectedCountry(country);
+  };
 
   const countriesToShow = !showedCountries
     ? countries
@@ -31,32 +37,40 @@ function App() {
 
       {countriesToShow.length > 10 ? (
         <p>Too many matches, specify another filter</p>
-      ) : countriesToShow.length === 1 ? (
+      ) : selectedCountry ? (
         <div>
-          <h2>{countriesToShow[0].name.common}</h2>
+          <h2>{selectedCountry.name.common}</h2>
           <p>
             <strong>Capital:&nbsp;</strong>
-            {countriesToShow[0].capital}
+            {selectedCountry.capital}
           </p>
           <p>
             <strong>Area:&nbsp;</strong>
-            {countriesToShow[0].area} km²
+            {selectedCountry.area} km²
           </p>
           <h4>Languages:</h4>
           <ul>
-            {Object.values(countriesToShow[0].languages).map((lang, index) => (
+            {Object.values(selectedCountry.languages).map((lang, index) => (
               <li key={index}>{lang}</li>
             ))}
           </ul>
           <img
-            src={countriesToShow[0].flags.png}
-            alt={`Flag of ${countriesToShow[0].name.common}`}
+            src={selectedCountry.flags.png}
+            alt={`Flag of ${selectedCountry.name.common}`}
             style={{ width: "200px" }}
           />
+          <div style={{marginTop: '1rem'}}>
+            <button onClick={() => setSelectedCountry(null)}>Back to list</button>
+          </div>
         </div>
       ) : (
         countriesToShow.map(country => (
-          <p key={country.name.official}>{country.name.common}</p>
+          <li key={country.name.official} style={{marginTop: '1rem'}}>
+            <span>{country.name.common}&nbsp;</span>
+            <button onClick={() => handleShowDetails(country)}>
+              Show details
+            </button>
+          </li>
         ))
       )}
     </div>
