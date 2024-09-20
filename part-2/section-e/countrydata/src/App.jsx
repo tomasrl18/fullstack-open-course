@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react"
 
 import countriesService from "./services/countries"
+import weatherService from "./services/weather"
+
+import Country from "./components/Country"
+import Countries from "./components/Countries"
 
 function App() {
   const [countries, setCountries] = useState([])
   const [showedCountries, setShowedCountries] = useState('')
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCountryWeather, setSelectedCountryWeather] = useState(null);
 
   useEffect(() => {
     countriesService
@@ -22,6 +27,13 @@ function App() {
 
   const handleShowDetails = (country) => {
     setSelectedCountry(country);
+
+    weatherService
+      .getWeatherOfACountry(country.name.common.toLowerCase())
+      .then(returnedCountryWeater => {
+        setSelectedCountryWeather(returnedCountryWeater)
+      })
+      .catch(err => console.error(err))
   };
 
   const countriesToShow = !showedCountries
@@ -38,40 +50,19 @@ function App() {
       {countriesToShow.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : selectedCountry ? (
+
         <div>
-          <h2>{selectedCountry.name.common}</h2>
-          <p>
-            <strong>Capital:&nbsp;</strong>
-            {selectedCountry.capital}
-          </p>
-          <p>
-            <strong>Area:&nbsp;</strong>
-            {selectedCountry.area} km²
-          </p>
-          <h4>Languages:</h4>
-          <ul>
-            {Object.values(selectedCountry.languages).map((lang, index) => (
-              <li key={index}>{lang}</li>
-            ))}
-          </ul>
-          <img
-            src={selectedCountry.flags.png}
-            alt={`Flag of ${selectedCountry.name.common}`}
-            style={{ width: "200px" }}
+          <Country
+            selectedCountry={selectedCountry}
+            selectedCountryWeather={selectedCountryWeather}
           />
+
           <div style={{marginTop: '1rem'}}>
-            <button onClick={() => setSelectedCountry(null)}>Back to list</button>
+            <button onClick={() => {setSelectedCountry(null); setSelectedCountryWeather(null)}}>Back to list</button>
           </div>
         </div>
       ) : (
-        countriesToShow.map(country => (
-          <li key={country.name.official} style={{marginTop: '1rem'}}>
-            <span>{country.name.common}&nbsp;</span>
-            <button onClick={() => handleShowDetails(country)}>
-              Show details
-            </button>
-          </li>
-        ))
+        <Countries countriesToShow={countriesToShow} handleShowDetailsEvent={handleShowDetails}/>
       )}
     </div>
   )
