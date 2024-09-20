@@ -129,6 +129,33 @@ const App = () => {
       })
   }
 
+  const handleDelete = ({ id, name }) => {
+    personService
+      .destroy(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+
+        const newMessage = {
+          message: `Deleted ${name}`,
+          type: 'success'
+        }
+
+        setMessage(newMessage)
+
+        removeMessage()
+      })
+      .catch(error => {
+        const newMessage = {
+          message: `An error ocurred while deleting ${name}`,
+          type: 'error'
+        }
+
+        setMessage(newMessage)
+
+        removeMessage()
+      });
+  }
+
   const removeMessage = () => {
     setTimeout(() => {
       setMessage([
@@ -150,10 +177,6 @@ const App = () => {
 
   const handleShowChange = (event) => {
     setShow(event.target.value)
-  }
-
-  const handleDelete = (id) => {
-    setPersons(persons.filter(person => person.id !== id));
   }
 
   const numbersToShow = !show
