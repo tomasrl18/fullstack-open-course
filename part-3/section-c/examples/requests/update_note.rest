@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/notes/66f198c7f317094565c55b58
+Content-Type: application/json
+
+{
+    "content": "Mongoose is awesome",
+    "important": true
+}
