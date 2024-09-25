@@ -1,11 +1,10 @@
-require('dotenv').config()
 const express = require('express')
+const app = express()
+require('dotenv').config()
+
 const Note = require('./models/note')
 
-const app = express()
-
 app.use(express.static('dist'))
-app.use(express.json())
 
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
@@ -15,7 +14,11 @@ const requestLogger = (request, response, next) => {
     next()
 }
 
+app.use(cors())
+app.use(express.json())
 app.use(requestLogger)
+
+const cors = require('cors')
 
 app.get('/api/notes', (request, response) => {
     Note.find({}).then(notes => {
