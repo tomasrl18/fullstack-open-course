@@ -118,14 +118,25 @@ const App = () => {
         removeMessage()
       })
       .catch(error => {
-        const newMessage = {
-          message: `An error ocurred while adding ${person.name}`,
-          type: 'error'
+        if (error.response && error.response.data && error.response.data.error) {
+          const newMessage = {
+            message: error.response.data.error,
+            type: 'error'
+          }
+
+          setMessage(newMessage)
+
+          removeMessage()
+        } else {
+          const newMessage = {
+            message: `An error ocurred while adding ${person.name}`,
+            type: 'error'
+          }
+  
+          setMessage(newMessage)
+  
+          removeMessage()
         }
-
-        setMessage(newMessage)
-
-        removeMessage()
       })
   }
 
