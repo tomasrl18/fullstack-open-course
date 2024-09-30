@@ -3,16 +3,7 @@ const assert = require('node:assert')
 
 const listHelper = require('../utils/list_helper')
 
-describe('total likes', () => {
-    const listWithOneBlog = [
-        {
-          title: 'Go To Statement Considered Harmful',
-          author: 'Edsger W. Dijkstra',
-          url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-          likes: 5,
-        }
-    ]
-
+describe('favourite blog', () => {
     const blogs = [
         {
           title: "React patterns",
@@ -51,14 +42,14 @@ describe('total likes', () => {
           likes: 2,
         }  
     ]
-    
-    test('when list has only one blog, equals the likes of that', () => {
-        const result = listHelper.totalLikes(listWithOneBlog)
-        assert.strictEqual(result, 5)
-    })
 
-    test('when list has more than one blog, equals the sum of its likes', () => {
-        const result = listHelper.totalLikes(blogs)
-        assert.strictEqual(result, 36)
+    test('return the blog with more likes', () => {
+        const result = listHelper.favouriteBlog(blogs)
+        assert.deepStrictEqual(result, {
+            author: "Edsger W. Dijkstra",
+            likes: 12,
+            title: "Canonical string reduction",
+            url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+        })
     })
 })
