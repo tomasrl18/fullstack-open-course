@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 
 const Blog = require('../models/blog')
@@ -20,10 +20,21 @@ beforeEach(async () => {
     }
 })
 
-test('all blogs are returned', async () => {
-    const response = await api.get('/api/blogs')
+describe('api tests', () => {
+    test('all blogs are returned', async () => {
+        const response = await api.get('/api/blogs')
     
-    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+        assert.strictEqual(response.body.length, helper.initialBlogs.length)
+    })
+    
+    test('the unique identifier property of blog posts is named id', async () => {
+        const response = await api.get('/api/blogs')
+    
+        for (let blog of response.body) {
+            assert(blog.id)
+            assert.strictEqual(blog._id, undefined)
+        }
+    })
 })
 
 after(async () => {
