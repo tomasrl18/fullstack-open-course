@@ -72,6 +72,38 @@ describe('api tests', () => {
       
         assert.strictEqual(response.body.likes, 0)
     })
+
+    test('blog without title is not added', async () => {
+        const newBlog = {
+            author: 'A test author',
+            url: 'https://aTestURL.com',
+        }
+      
+        await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(400)
+      
+        const blogsAtEnd = await helper.blogsInDb()
+      
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+    })
+
+    test('blog without url is not added', async () => {
+        const newBlog = {
+            title: 'A test title',
+            author: 'A test author',
+        }
+      
+        await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(400)
+      
+        const blogsAtEnd = await helper.blogsInDb()
+      
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+    })
 })
 
 after(async () => {
