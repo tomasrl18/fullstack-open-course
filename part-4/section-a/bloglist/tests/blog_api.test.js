@@ -35,6 +35,27 @@ describe('api tests', () => {
             assert.strictEqual(blog._id, undefined)
         }
     })
+
+    test('a valid blog can be added ', async () => {
+        const newBlog = {
+          title: 'Invicto',
+          author: 'Marcos Vazquez',
+          url: 'https://latam.casadellibro.com/libro-invicto/9788413980577/12505205',
+          likes: 123456789
+        }
+    
+        await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
+    
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+    
+        const titles = blogsAtEnd.map(n => n.title)
+        assert(titles.includes('Invicto'))
+    })
 })
 
 after(async () => {
