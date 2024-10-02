@@ -103,7 +103,25 @@ describe('when there is initially some notes saved', () => {
                 assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
             })
         })
-    
+
+        describe('updating a blog', () => {
+            test('a blog can be updated', async () => {
+              const blogsAtStart = await Blog.find({})
+              const blogToUpdate = blogsAtStart[0]
+          
+              const updatedBlogData = {
+                likes: blogToUpdate.likes + 10
+              }
+
+              const response = await api
+                .put(`/api/blogs/${blogToUpdate.id}`)
+                .send(updatedBlogData)
+                .expect(200)
+                .expect('Content-Type', /application\/json/)
+              
+              assert.strictEqual(response.body.likes, blogToUpdate.likes + 10)
+            })
+        })
     
         describe('deletion of a blog', () => {
             test('succeeds with status code 204 if id is valid', async () => {
