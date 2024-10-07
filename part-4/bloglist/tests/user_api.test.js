@@ -63,6 +63,48 @@ describe('when there is initially one user in db', () => {
     
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
+
+    test('creation fails with proper statuscode and message if username is not longer than 3 chars', async () => {
+      const usersAtStart = await helper.usersInDb()
+  
+      const newUser = {
+        username: 'a',
+        name: 'A name',
+        password: 'a_good_password',
+      }
+  
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAtEnd = await helper.usersInDb()
+      assert(result.body.error.includes('User validation failed: username: Path `username` (`a`) is shorter than the minimum allowed length (3).'))
+  
+      assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if password is not longer than 3 chars', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'a_real_username',
+      name: 'A name',
+      password: '1',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert(result.body.error.includes('User validation failed: password is shorter than the minimum allowed length (3).'))
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+})
 })
   
 after(async () => {
