@@ -137,6 +137,8 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
+
+      noteService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -187,7 +189,7 @@ const App = () => {
         </div>
       }
 
-      <div>
+      <div style={{ marginTop: '1rem' }}>
         <button onClick={() => setShowAll(!showAll)}>
           Show {showAll ? 'important' : 'all' }
         </button>
@@ -202,14 +204,6 @@ const App = () => {
           />
         )}
       </ul>
-      <form onSubmit={addNote}>
-        <input
-          placeholder='A new note...'
-          value={newNote}
-          onChange={handleNoteChange}
-        />
-        <button type="submit">Save</button>
-      </form>
 
       <Footer />
     </div>
