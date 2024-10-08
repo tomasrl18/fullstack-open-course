@@ -5,6 +5,7 @@ import loginService from './services/login'
 
 import Note from './components/Note'
 import Notification from './components/Notificacion'
+import NoteForm from './components/NoteForm'
 
 const Footer = () => {
   const footerStyle = {
@@ -169,16 +170,6 @@ const App = () => {
     </form>      
   )
 
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input
-        value={newNote}
-        onChange={handleNoteChange}
-      />
-      <button type="submit">save</button>
-    </form>  
-  )
-
   return (
     <div>
       <h1>Notes</h1>
@@ -188,7 +179,11 @@ const App = () => {
         loginForm() :
         <div>
           <p>{user.name} logged-in</p>
-          {noteForm()}
+          <NoteForm
+            addNote={addNote}
+            newNote={newNote}
+            handleNoteChange={handleNoteChange}
+          />
         </div>
       }
 
