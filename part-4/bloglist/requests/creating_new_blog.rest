@@ -3,9 +3,9 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvbWFzcmwiLCJpZCI6IjY3MDQxZTQ0YWVjM2JiMWNlYzFmYjZmOCIsImlhdCI6MTcyODMyNTU0Nn0.I1-ZG2KPBekDbtFseid-z0PrufYy8_9xHf6STyJuBh4
 
 {
-    "title": "An article",
-    "author": "A person",
-    "url": "https://anotherurl.com",
-    "likes": 134,
+    "title": "An interesting article",
+    "author": "A real person",
+    "url": "https://otherurl.com",
+    "likes": 1564,
     "userId": "67041e44aec3bb1cec1fb6f8"
 }
