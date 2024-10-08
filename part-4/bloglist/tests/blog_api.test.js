@@ -2,6 +2,8 @@ const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
@@ -34,74 +36,113 @@ describe('when there is initially some notes saved', () => {
         })
     
         describe('addition of a new blog', () => {
-            test('a valid blog can be added ', async () => {
-                const newBlog = {
-                  title: 'Invicto',
-                  author: 'Marcos Vazquez',
-                  url: 'https://latam.casadellibro.com/libro-invicto/9788413980577/12505205',
-                  likes: 123456789
-                }
+          let token;
+
+          beforeEach(async () => {
+            await User.deleteMany({})
+
+            const passwordHash = await bcrypt.hash('123456789', 10)
+            const user = new User({ username: 'holapaco', passwordHash })
             
-                await api
-                  .post('/api/blogs')
-                  .send(newBlog)
-                  .expect(201)
-                  .expect('Content-Type', /application\/json/)
+            await user.save() 
+
+            const loginResponse = await api
+              .post('/api/login')
+              .send({ username: 'holapaco', password: '123456789' });
             
-                const blogsAtEnd = await helper.blogsInDb()
-                assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
-            
-                const titles = blogsAtEnd.map(n => n.title)
-                assert(titles.includes('Invicto'))
-            })
+            token = loginResponse.body.token;
+
+            if (!token) {
+              throw new Error('Failed to retrieve token during login');
+            }
+          });
+
+          test('a valid blog can be added with token', async () => {
+            const newBlog = {
+              title: 'Invicto',
+              author: 'Marcos Vazquez',
+              url: 'https://latam.casadellibro.com/libro-invicto/9788413980577/12505205',
+              likes: 123456789,
+            };
         
-            test('blog without likes set blog likes to 0', async () => {
-                const newBlog = {
-                  title: 'A test title',
-                  author: 'A test author',
-                  url: 'https://aTestURL.com'
-                }
-              
-                const response = await api
-                  .post('/api/blogs')
-                  .send(newBlog)
-                  .expect(201)
-                  .expect('Content-Type', /application\/json/)
-              
-                assert.strictEqual(response.body.likes, 0)
-            })
+            await api
+              .post('/api/blogs')
+              .set('Authorization', `Bearer ${token}`)
+              .send(newBlog)
+              .expect(201)
+              .expect('Content-Type', /application\/json/);
         
-            test('blog without title is not added', async () => {
-                const newBlog = {
-                    author: 'A test author',
-                    url: 'https://aTestURL.com',
-                }
-              
-                await api
-                  .post('/api/blogs')
-                  .send(newBlog)
-                  .expect(400)
-              
-                const blogsAtEnd = await helper.blogsInDb()
-              
-                assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-            })
+            const blogsAtEnd = await helper.blogsInDb();
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
         
-            test('blog without url is not added', async () => {
-                const newBlog = {
-                    title: 'A test title',
-                    author: 'A test author',
-                }
-              
-                await api
-                  .post('/api/blogs')
-                  .send(newBlog)
-                  .expect(400)
-              
-                const blogsAtEnd = await helper.blogsInDb()
-              
-                assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-            })
+            const titles = blogsAtEnd.map(n => n.title);
+            assert(titles.includes('Invicto'));
+          });
+      
+          test('blog without likes set blog likes to 0', async () => {
+            const newBlog = {
+              title: 'A test title',
+              author: 'A test author',
+              url: 'https://aTestURL.com'
+            };
+        
+            const response = await api
+              .post('/api/blogs')
+              .set('Authorization', `Bearer ${token}`)
+              .send(newBlog)
+              .expect(201)
+              .expect('Content-Type', /application\/json/);
+        
+            assert.strictEqual(response.body.likes, 0);
+          });
+      
+          test('blog without title is not added', async () => {
+            const newBlog = {
+              author: 'A test author',
+              url: 'https://aTestURL.com',
+            };
+        
+            await api
+              .post('/api/blogs')
+              .set('Authorization', `Bearer ${token}`)
+              .send(newBlog)
+              .expect(400);
+        
+            const blogsAtEnd = await helper.blogsInDb();
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
+          });
+      
+          test('blog without url is not added', async () => {
+            const newBlog = {
+              title: 'A test title',
+              author: 'A test author',
+            };
+        
+            await api
+              .post('/api/blogs')
+              .set('Authorization', `Bearer ${token}`)
+              .send(newBlog)
+              .expect(400);
+        
+            const blogsAtEnd = await helper.blogsInDb();
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
+          });
+
+          test('blog addition fails with 401 Unauthorized if token is not provided', async () => {
+            const newBlog = {
+              title: 'Unauthorized Blog',
+              author: 'No Token Author',
+              url: 'https://unauthorized.com'
+            };
+        
+            await api
+              .post('/api/blogs')
+              .send(newBlog)
+              .expect(401);
+        
+            const blogsAtEnd = await helper.blogsInDb();
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
+          });
         })
 
         describe('updating a blog', () => {
