@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import AddBlog from './components/CreateBlogForm'
+import Notification from './components/Notification'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -15,6 +16,12 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [message, setMessage] = useState([
+    {
+      message: '',
+      type: ''
+    }
+  ])
 
   useEffect(() => {
     if (user) {
@@ -47,11 +54,13 @@ const App = () => {
       )
 
       blogService.setToken(user.token)
+
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      console.log(exception);
+    } catch (e) {
+      setMessage({ message: 'Wrong credentials', type: 'error' })
+      removeMessage()
     }
   }
 
@@ -78,27 +87,56 @@ const App = () => {
 
       setBlogs(blogs.concat(newBlog))
 
-      alert('Succesfully created')
+      setMessage(
+        {
+          message: `Added "${newBlog.title}"`,
+          type: 'success'
+        }
+      )
+
+      removeMessage()
     } catch (e) {
-      alert(e)
+      setMessage(
+        {
+          message: 'An error occurred while adding the blog',
+          type: 'error'
+        }
+      )
+
+      removeMessage()
     }
+  }
+
+  const removeMessage = () => {
+    setTimeout(() => {
+      setMessage([
+        {
+          message: '',
+          type: ''
+        }
+      ])
+    }, 5000)
   }
 
   if (user === null) {
     return (
-      <LoginForm
-        handleLogin={handleLogin}
-        username={username}
-        setUsername={setUsername}
-        password={password}
-        setPassword={setPassword}
-      />
+      <div>
+        <Notification message={message.message} type={message.type}/>
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />
+      </div>
     )
   }
 
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={message.message} type={message.type}/>
         <div>
           <p>{user.name} logged-in</p>
           <button onClick={handleLogout}>Logout</button>
