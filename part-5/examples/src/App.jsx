@@ -12,7 +12,6 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [message, setMessage] = useState([
     {
@@ -23,7 +22,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService
@@ -43,39 +41,11 @@ const App = () => {
     }
   }, [])
   
-  const addNote = (event) => {
-    event.preventDefault()
-
-    const note = {
-      content: newNote,
-      important: Math.random() < 0.5,
-      id: notes.length + 1
-    }
-
+  const addNote = (noteObject) => {
     noteService
-      .create(note)
+      .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
-
-        const newMessage = {
-          message: `Added "${note.content}"`,
-          type: 'success'
-        }
-
-        setMessage(newMessage)
-
-        removeMessage()
-      })
-      .catch(error => {
-        const newMessage = {
-          message: 'An error occurred while adding the note',
-          type: 'error'
-        }
-
-        setMessage(newMessage)
-
-        removeMessage()
       })
   }
 
@@ -109,10 +79,6 @@ const App = () => {
 
         removeMessage()
       })
-  }
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
   }
 
   const removeMessage = () => {
@@ -174,11 +140,7 @@ const App = () => {
         loginForm()
         :
         <Togglable buttonLabel='New note'>
-          <NoteForm
-            onSubmit={addNote}
-            value={newNote}
-            handleChange={handleNoteChange}
-          />
+          <NoteForm createNote={addNote} />
         </Togglable>
       }
 
