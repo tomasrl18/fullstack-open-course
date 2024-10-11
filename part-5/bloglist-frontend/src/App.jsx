@@ -4,6 +4,7 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import AddBlog from './components/CreateBlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -22,12 +23,15 @@ const App = () => {
       type: ''
     }
   ])
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
-    if (user) {
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+    if(user) {
+      blogService
+        .getAll()
+        .then(blogs =>
+          setBlogs(blogs)
+        )
     }
   }, [user])
 
@@ -122,13 +126,15 @@ const App = () => {
     return (
       <div>
         <Notification message={message.message} type={message.type}/>
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-        />
+        <Togglable buttonLabel='Login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
       </div>
     )
   }
@@ -143,15 +149,17 @@ const App = () => {
           
           <br />
 
-          <AddBlog
-            handleAddBlog={handleAddBlog}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-          />
+          <Togglable buttonLabel='New blog'>
+            <AddBlog
+              handleAddBlog={handleAddBlog}
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              url={url}
+              setUrl={setUrl}
+            />
+          </Togglable>
           
           {
             blogs.map(blog =>
