@@ -6,20 +6,8 @@ import loginService from './services/login'
 import Note from './components/Note'
 import Notification from './components/Notificacion'
 import NoteForm from './components/NoteForm'
-
-const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2024</em>
-    </div>
-  )
-}
+import LoginForm from './components/LoginForm'
+import Footer from './components/Footer'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -34,6 +22,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     noteService
@@ -160,30 +149,29 @@ const App = () => {
       removeMessage()
     }
   }
-  
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
+
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
+    return (
       <div>
-        Username:&nbsp;
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>Cancel</button>
+        </div>
       </div>
-      <div>
-        Password:&nbsp;
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Login</button>
-    </form>      
-  )
+    )
+  }
 
   return (
     <div>
@@ -191,7 +179,8 @@ const App = () => {
       <Notification message={message.message} type={message.type}/>
 
       {user === null ?
-        loginForm() :
+        loginForm()
+        :
         <div>
           <p>{user.name} logged-in</p>
           <NoteForm
@@ -208,11 +197,13 @@ const App = () => {
         </button>
         <h3>{showAll ? 'Showing all of the notes' : 'Showing the important notes'}</h3>
       </div>
+      
       <ul>
         {notesToShow.map((note, i) => 
           <Note
             key={i}
-            note={note}
+            important={note.important}
+            content={note.content}
             toggleImportance={() => toggleImportanceOf(note.id)}
           />
         )}
