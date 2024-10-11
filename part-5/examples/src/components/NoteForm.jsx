@@ -1,15 +1,19 @@
-const NoteForm = ({ addNote, newNote, handleNoteChange }) => {
+const NoteForm = ({ onSubmit, value, handleChange }) => {
   return (
-    <>
-      <form onSubmit={addNote}>
-        <input
-          placeholder="A new note..."
-          value={newNote}
-          onChange={handleNoteChange}
-        />
-        <button type="submit" style={{ marginLeft: '1 rem' }}>Save</button>
+    <div>
+      <h2>Create a new note</h2>
+
+      <form onSubmit={onSubmit}>
+        <div>
+          <input
+            placeholder="A new note..."
+            value={value}
+            onChange={handleChange}
+          />
+        </div>
+        <button type="submit" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Save</button>
       </form>
-    </>
+    </div>
   )
 }
 

@@ -8,6 +8,7 @@ import Notification from './components/Notificacion'
 import NoteForm from './components/NoteForm'
 import LoginForm from './components/LoginForm'
 import Footer from './components/Footer'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -151,25 +152,16 @@ const App = () => {
   }
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
-
     return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
-        </div>
-        <div style={showWhenVisible}>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-          <button onClick={() => setLoginVisible(false)}>Cancel</button>
-        </div>
-      </div>
+      <Togglable buttonLabel='Login'>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+      </Togglable>
     )
   }
 
@@ -181,14 +173,13 @@ const App = () => {
       {user === null ?
         loginForm()
         :
-        <div>
-          <p>{user.name} logged-in</p>
+        <Togglable buttonLabel='New note'>
           <NoteForm
-            addNote={addNote}
-            newNote={newNote}
-            handleNoteChange={handleNoteChange}
+            onSubmit={addNote}
+            value={newNote}
+            handleChange={handleNoteChange}
           />
-        </div>
+        </Togglable>
       }
 
       <div style={{ marginTop: '1rem' }}>
