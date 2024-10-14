@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -125,7 +125,7 @@ const App = () => {
       <Notification message={message.message} type={message.type}/>
         <div>
           <p>{user.name} logged-in</p>
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout} style={{ marginBottom: '1rem' }}>Logout</button>
           
           <br />
 
