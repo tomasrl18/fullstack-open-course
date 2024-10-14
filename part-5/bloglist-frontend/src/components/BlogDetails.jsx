@@ -1,4 +1,4 @@
-const BlogDetails = ({ blog, handleUpdateLikes }) => {
+const BlogDetails = ({ blog, user, handleUpdateLikes }) => {
     return(
         <>
             <li className='blogItem'>
@@ -12,6 +12,9 @@ const BlogDetails = ({ blog, handleUpdateLikes }) => {
             </li>
             <li className='blogItem'>
                 <strong className="details">URL: </strong> {blog.url}
+            </li>
+            <li className='blogItem'>
+                <strong className="details">Creator name: </strong> {blog.author == 'Me' ? user.name : blog.author}
             </li>
         </>
     )

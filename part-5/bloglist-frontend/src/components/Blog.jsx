@@ -13,7 +13,6 @@ const Blog = ({ blog, user, handleUpdateLikes }) => {
     <div className="blogContainer">
       <li className="blogItem">
         <strong className="title">Título:</strong> {blog.title}
-        &nbsp;<strong className="details">Autor:</strong> {blog.author == 'Me' ? user.name : blog.author}
         <button
           style={{ marginLeft: '1rem' }}
           onClick={handleDetails}
@@ -24,7 +23,7 @@ const Blog = ({ blog, user, handleUpdateLikes }) => {
 
       {
         isDetailled
-        ? <BlogDetails blog={blog} handleUpdateLikes={handleUpdateLikes} />
+        ? <BlogDetails blog={blog} user={user} handleUpdateLikes={handleUpdateLikes} />
         : ''
       }
     </div>
