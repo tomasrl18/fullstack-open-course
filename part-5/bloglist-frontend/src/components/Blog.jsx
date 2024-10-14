@@ -30,4 +30,11 @@ const Blog = ({ blog, user, handleUpdateLikes, handleDeleteBlog }) => {
   )
 }
 
+Blog.propTypes = {
+  handleUpdateLikes: PropTypes.func.isRequired,
+  handleDeleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  blog: PropTypes.object.isRequired
+}
+
 export default Blog
