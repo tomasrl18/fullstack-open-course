@@ -91,6 +91,23 @@ const App = () => {
       })
   }
 
+  const handleUpdateLikes = (id) => {
+    const blogToUpdate = blogs.find(blog => blog.id === id);
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 1
+    };
+    
+    blogService
+      .update(id, updatedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
   const removeMessage = () => {
     setTimeout(() => {
       setMessage([
@@ -137,7 +154,7 @@ const App = () => {
           
           {
             blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} user={user} />
+              <Blog key={blog.id} blog={blog} user={user} handleUpdateLikes={handleUpdateLikes} />
             )
           }
         </div>
