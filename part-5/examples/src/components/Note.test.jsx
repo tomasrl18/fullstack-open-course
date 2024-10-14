@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import Note from './Note'
 
 test('renders content', () => {
@@ -8,8 +8,10 @@ test('renders content', () => {
     important: true
   }
 
-  render(<Note important={note.important} content={note.content} />)
+  const { container } = render(<Note important={note.important} content={note.content}  />)
 
-  const element = screen.getByText('Component testing is done with react-testing-library')
-  expect(element).toBeDefined()
+  const div = container.querySelector('.note')
+  expect(div).toHaveTextContent(
+    'Component testing is done with react-testing-library'
+  )
 })
