@@ -1,21 +1,37 @@
-const BlogDetails = ({ blog, user, handleUpdateLikes }) => {
-    return(
+const BlogDetails = ({ blog, user, handleUpdateLikes, handleDeleteBlog }) => {
+    const confirmDelete = () => {
+        if (window.confirm(`Do you really want to delete the blog "${blog.title}"?`)) {
+          handleDeleteBlog(blog.id)
+        }
+    }
+    
+    return (
         <>
             <li className='blogItem'>
                 <strong className="details">Likes: </strong> {blog.likes}
                 <button
-                onClick={() => handleUpdateLikes(blog.id)}
-                style={{ marginLeft: '0.5rem' }}
+                    onClick={() => handleUpdateLikes(blog.id)}
+                    style={{ marginLeft: '0.5rem' }}
                 >
-                Like
+                    Like
                 </button>
             </li>
             <li className='blogItem'>
                 <strong className="details">URL: </strong> {blog.url}
             </li>
             <li className='blogItem'>
-                <strong className="details">Creator name: </strong> {blog.author == 'Me' ? user.name : blog.author}
+                <strong className="details">Creator name: </strong> {user.name}
             </li>
+
+            {
+                blog.user && (blog.user.name == user.name)
+                ?
+                    <button onClick={confirmDelete} style={{ marginTop: '0.5rem' }}>
+                        Delete
+                    </button>
+                :
+                    ''
+            }
         </>
     )
 }

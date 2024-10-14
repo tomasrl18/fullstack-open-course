@@ -108,6 +108,11 @@ const App = () => {
       })
   }
 
+  const handleDeleteBlog = (id) => {
+    blogService.destroy(id)
+    setBlogs(blogs.filter(blog => blog.id !== id))
+  }
+
   const removeMessage = () => {
     setTimeout(() => {
       setMessage([
@@ -161,6 +166,7 @@ const App = () => {
                   blog={blog}
                   user={user}
                   handleUpdateLikes={handleUpdateLikes}
+                  handleDeleteBlog={handleDeleteBlog}
                 />
             )
           }

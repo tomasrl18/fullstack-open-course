@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import BlogDetails from './BlogDetails'
 
-const Blog = ({ blog, user, handleUpdateLikes }) => {
+const Blog = ({ blog, user, handleUpdateLikes, handleDeleteBlog }) => {
   const [isDetailled, setIsDetailled] = useState(false)
 
   const handleDetails = () => {
@@ -23,7 +23,7 @@ const Blog = ({ blog, user, handleUpdateLikes }) => {
 
       {
         isDetailled
-        ? <BlogDetails blog={blog} user={user} handleUpdateLikes={handleUpdateLikes} />
+        ? <BlogDetails blog={blog} user={user} handleUpdateLikes={handleUpdateLikes} handleDeleteBlog={handleDeleteBlog} />
         : ''
       }
     </div>
