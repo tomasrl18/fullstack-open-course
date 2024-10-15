@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const BlogDetails = ({ blog, user, handleUpdateLikes, handleDeleteBlog }) => {
     const confirmDelete = () => {
         if (window.confirm(`Do you really want to delete the blog "${blog.title}"?`)) {
