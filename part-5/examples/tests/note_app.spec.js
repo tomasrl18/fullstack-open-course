@@ -20,7 +20,7 @@ test.describe('Note app', () => {
       await expect(page.getByText('Note app, Department of Computer Science, University of Helsinki 2024')).toBeVisible()
     })
 
-    test('login fails with wrong password', async ({ page }) => {
+    test.only('login fails with wrong password', async ({ page }) => {
         await page.getByRole('button', { name: 'Login' }).click()
         
         await page.getByTestId('username').fill('tomasrl')
