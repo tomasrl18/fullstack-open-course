@@ -25,6 +25,7 @@ const NoteForm = ({ createNote }) => {
             value={newNote}
             onChange={event => setNewNote(event.target.value)}
             id='note-input'
+            data-testid='new-note'
           />
         </div>
         <button type="submit" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Save</button>
