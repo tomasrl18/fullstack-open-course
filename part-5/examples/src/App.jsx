@@ -139,6 +139,10 @@ const App = () => {
       <h1>Notes</h1>
       <Notification message={message.message} type={message.type}/>
 
+      {
+        user !== null ? user.name + ' logged in' : ''
+      }
+
       {user === null ?
         loginForm()
         :
