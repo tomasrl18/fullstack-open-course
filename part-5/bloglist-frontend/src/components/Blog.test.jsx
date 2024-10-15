@@ -50,4 +50,17 @@ describe('blog', () => {
         expect(urlElement).toBeDefined()
         expect(likesElement).toBeDefined()
     })
+
+    test('showing details when click', async () => {
+        const clickerUser = userEvent.setup()
+
+        const detailsButton = screen.getByText('View details')
+        await clickerUser.click(detailsButton)
+        
+        const likeButton = screen.getByText('Like')
+        await clickerUser.click(likeButton)
+        await clickerUser.click(likeButton)
+
+        expect(mockHandler.mock.calls).toHaveLength(2)
+    })
 })
