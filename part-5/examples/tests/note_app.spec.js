@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test'
 
+import { loginWith, createNote } from './helper'
+
 test.describe('Note app', () => {
     test.beforeEach(async ({ page, request }) => {
-        await request.post('http:localhost:3001/api/testing/reset')
-        await request.post('http://localhost:3001/api/users', {
+        await request.post('/api/testing/reset')
+        await request.post('/api/users', {
           data: {
             name: 'Tomas',
             username: 'tomasrl',
@@ -11,7 +13,7 @@ test.describe('Note app', () => {
           }
         })
     
-        await page.goto('http://localhost:5173')
+        await page.goto('/')
     })
     
     test.skip('Front page can be opened', async ({ page }) => {
@@ -20,13 +22,8 @@ test.describe('Note app', () => {
       await expect(page.getByText('Note app, Department of Computer Science, University of Helsinki 2024')).toBeVisible()
     })
 
-    test.only('login fails with wrong password', async ({ page }) => {
-        await page.getByRole('button', { name: 'Login' }).click()
-        
-        await page.getByTestId('username').fill('tomasrl')
-        await page.getByTestId('password').fill('wrong')
-
-        await page.getByRole('button', { name: 'Login' }).click()
+    test('login fails with wrong password', async ({ page }) => {
+        await loginWith(page, 'tomarl', 'wrong')
     
         await expect(page.getByText('wrong credentials')).toBeVisible()
     })
@@ -44,24 +41,17 @@ test.describe('Note app', () => {
     
     test.describe('When logged in', () => {
         test.beforeEach(async ({ page }) => {
-            await page.getByRole('button', { name: 'Login' }).click()
-
-            await page.getByTestId('username').fill('tomasrl')
-            await page.getByTestId('password').fill('123456789')
-
-            await page.getByRole('button', { name: 'Login' }).click()
+            await loginWith(page, 'tomarl', '123456789')
         })
 
         test('A new note can be created', async ({ page }) => {
-            await page.getByTestId('new-note').fill('A note created by playwright')
-            await page.getByRole('button', { name: 'Save' }).click()
+            await createNote(page, 'A note created by playwright', true)
             await expect(page.getByText('A note created by playwright')).toBeVisible()
         })
 
         test.describe('and a note exists', () => {
             test.beforeEach(async ({ page }) => {
-              await page.getByTestId('new-note').fill('Another note by playwright')
-              await page.getByRole('button', { name: 'Save' }).click()
+                await createNote(page, 'Another note by playwright', true)
             })
         
             test('Importance can be changed', async ({ page }) => {
