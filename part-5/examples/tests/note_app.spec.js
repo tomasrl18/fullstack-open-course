@@ -41,7 +41,7 @@ test.describe('Note app', () => {
     
     test.describe('When logged in', () => {
         test.beforeEach(async ({ page }) => {
-            await loginWith(page, 'tomarl', '123456789')
+            await loginWith(page, 'tomasrl', '123456789')
         })
 
         test('A new note can be created', async ({ page }) => {
@@ -49,14 +49,19 @@ test.describe('Note app', () => {
             await expect(page.getByText('A note created by playwright')).toBeVisible()
         })
 
-        test.describe('and a note exists', () => {
+        test.describe('and several notes exists', () => {
             test.beforeEach(async ({ page }) => {
-                await createNote(page, 'Another note by playwright', true)
+                await createNote(page, 'first note', true)
+                await createNote(page, 'second note', true)
+                await createNote(page, 'third note', true)
             })
         
-            test('Importance can be changed', async ({ page }) => {
-              await page.getByRole('button', { name: 'Make not important' }).click()
-              await expect(page.getByText('Make important')).toBeVisible()
+            test('one of those can be made nonimportant', async ({ page }) => {
+                const otherNoteText = await page.getByText('second note')
+                const otherdNoteElement = await otherNoteText.locator('..')
+          
+                await otherdNoteElement.getByRole('button', { name: 'Make not important' }).click()
+                await expect(otherdNoteElement.getByText('Make important')).toBeVisible()
             })
         })
     })
