@@ -1,7 +1,16 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Note app', () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, request }) => {
+        await request.post('http:localhost:3001/api/testing/reset')
+        await request.post('http://localhost:3001/api/users', {
+          data: {
+            name: 'Tomas',
+            username: 'tomasrl',
+            password: '123456789'
+          }
+        })
+    
         await page.goto('http://localhost:5173')
     })
     
@@ -36,6 +45,18 @@ test.describe('Note app', () => {
             await page.getByTestId('new-note').fill('A note created by playwright')
             await page.getByRole('button', { name: 'Save' }).click()
             await expect(page.getByText('A note created by playwright')).toBeVisible()
+        })
+
+        test.describe('and a note exists', () => {
+            test.beforeEach(async ({ page }) => {
+              await page.getByTestId('new-note').fill('Another note by playwright')
+              await page.getByRole('button', { name: 'Save' }).click()
+            })
+        
+            test('Importance can be changed', async ({ page }) => {
+              await page.getByRole('button', { name: 'Make not important' }).click()
+              await expect(page.getByText('Make important')).toBeVisible()
+            })
         })
     })
 
