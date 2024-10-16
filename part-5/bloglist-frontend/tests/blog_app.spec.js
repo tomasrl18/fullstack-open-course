@@ -66,6 +66,24 @@ test.describe('Blog app', () => {
                 await page.getByText('Likes: 1').click();
             });
 
+            test('Blogs are ordered according to likes', async ({ page }) => {
+                await page.locator('li').filter({ hasText: 'Título: Second blog title' }).getByRole('button').click();
+                await page.getByRole('button', { name: 'Like' }).click();
+                await page.getByRole('button', { name: 'Like' }).click();
+                await page.getByRole('button', { name: 'Hide' }).click();
+            
+                await page.locator('li').filter({ hasText: 'Título: Third blog title' }).getByRole('button').click();
+                await page.getByRole('button', { name: 'Like' }).click();
+                await page.getByRole('button', { name: 'Hide' }).click();
+            
+                await page.locator('li').filter({ hasText: 'Título: First blog title' }).getByRole('button').click();
+                
+                const blogTitles = await page.locator('li').allInnerTexts();
+                expect(blogTitles[0]).toContain('Título: Second blog title');
+                expect(blogTitles[1]).toContain('Título: Third blog title');
+                expect(blogTitles[2]).toContain('Título: First blog title');
+            });
+
             test.describe('When blog can be deleted', () => {
                 test('A blog can be deleted', async ({ page }) => {
                     await page.goto('/')
