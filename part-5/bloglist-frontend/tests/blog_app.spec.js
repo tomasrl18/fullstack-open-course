@@ -45,18 +45,19 @@ test.describe('Blog app', () => {
             await expect(page.getByText('Título: A blog created by playwright')).toBeVisible()
         })
 
-        /* test('A new blog can be created', async ({ page }) => {
-            await loginWith(page, 'tomasrl', '123456789')
+        test.describe('And several blogs exists', () => {
+            test.beforeEach(async ({ page }) => {
+                await createBlog(page, 'First blog title', 'first blog author', 'first blog url', true)
+                await createBlog(page, 'Second blog title', 'Second blog author', 'Second blog url', true)
+                await createBlog(page, 'Third blog title', 'Third blog author', 'Third blog url', true)
+            })
 
-            await page.getByRole('button', { name: 'New blog' }).click();
-            await page.getByTestId('title').click();
-            await page.getByTestId('title').fill('Someone');
-            await page.getByTestId('title').press('Tab');
-            await page.getByTestId('author').fill('Someone');
-            await page.getByTestId('author').press('Tab');
-            await page.getByTestId('url').fill('Someone');
-            await page.getByRole('button', { name: 'Add' }).click();
-            await page.getByText('Título: SomeoneView details').click();
-        }); */
+            test('test', async ({ page }) => {
+                await page.locator('li').filter({ hasText: 'Título: Second blog title' }).getByRole('button').click();
+                await page.getByText('Likes: 0').click();
+                await page.getByRole('button', { name: 'Like' }).click();
+                await page.getByText('Likes: 1').click();
+            });
+        })
     })
 })

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
@@ -20,6 +20,7 @@ const App = () => {
       type: ''
     }
   ])
+  const blogFormRef = useRef()
 
   useEffect(() => {
     if(user) {
@@ -70,6 +71,8 @@ const App = () => {
   }
 
   const handleAddBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    
     blogService.create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
@@ -151,7 +154,7 @@ const App = () => {
           
           <br />
 
-          <Togglable buttonLabel='New blog'>
+          <Togglable buttonLabel='New blog' ref={blogFormRef}>
             <BlogForm
               createBlog={handleAddBlog}
             />
