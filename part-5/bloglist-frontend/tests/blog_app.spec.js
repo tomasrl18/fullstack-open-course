@@ -52,11 +52,26 @@ test.describe('Blog app', () => {
                 await createBlog(page, 'Third blog title', 'Third blog author', 'Third blog url', true)
             })
 
-            test('test', async ({ page }) => {
+            test('A blog can be liked', async ({ page }) => {
                 await page.locator('li').filter({ hasText: 'Título: Second blog title' }).getByRole('button').click();
                 await page.getByText('Likes: 0').click();
                 await page.getByRole('button', { name: 'Like' }).click();
                 await page.getByText('Likes: 1').click();
+            });
+
+            test('A blog can be deleted', async ({ page }) => {
+                await page.goto('/')
+                
+                await page.locator('li').filter({ hasText: 'Título: Third blog titleView' }).getByRole('button').click();
+                
+                page.once('dialog', dialog => {
+                  console.log(`Dialog message: ${dialog.message()}`);
+                  dialog.dismiss().catch(() => {});
+                });
+
+                await page.getByRole('button', { name: 'Delete' }).click();
+
+                await expect(page.locator('li').filter({ hasText: 'Título: Third blog titleView' })).toHaveCount(0);
             });
         })
     })
