@@ -1,15 +1,7 @@
 import ReactDOM from "react-dom/client";
-
 import { legacy_createStore as createStore } from "redux";
 
-const noteReducer = (state = [], action) => {
-  if (action.type === "NEW_NOTE") {
-    state.push(action.payload);
-    return state;
-  }
-
-  return state;
-};
+import noteReducer from "./reducers/noteReducer";
 
 const store = createStore(noteReducer);
 
@@ -31,6 +23,13 @@ store.dispatch({
   },
 });
 
+store.dispatch({
+  type: "TOGGLE_IMPORTANCE",
+  payload: {
+    id: 2,
+  },
+});
+
 const App = () => {
   return (
     <div>
@@ -45,13 +44,6 @@ const App = () => {
   );
 };
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-const renderApp = () => {
-  root.render(<App />);
-};
-
-renderApp();
-store.subscribe(renderApp);
+store.subscribe(App);
 
 export default App;
