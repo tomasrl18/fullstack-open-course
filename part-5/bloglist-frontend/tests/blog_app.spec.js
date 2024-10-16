@@ -1,16 +1,23 @@
 import { test, expect } from '@playwright/test'
 
-import { loginWith, createBlog } from './helper'
+import { loginWith, logOut, createBlog } from './helper'
 
 test.describe('Blog app', () => {
     test.beforeEach(async ({ page, request }) => {
         await request.post('/api/testing/reset')
         await request.post('/api/users', {
-        data: {
-            name: 'Tomas',
-            username: 'tomasrl',
-            password: '123456789'
-        }
+            data: {
+                name: 'Tomas',
+                username: 'tomasrl',
+                password: '123456789'
+            }
+        })
+        await request.post('/api/users', {
+            data: {
+                name: 'Super Saiyan',
+                username: 'root',
+                password: '123456789'
+            }
         })
 
         await page.goto('/')
@@ -59,20 +66,36 @@ test.describe('Blog app', () => {
                 await page.getByText('Likes: 1').click();
             });
 
-            test('A blog can be deleted', async ({ page }) => {
-                await page.goto('/')
-                
-                await page.locator('li').filter({ hasText: 'Título: Third blog titleView' }).getByRole('button').click();
-                
-                page.once('dialog', dialog => {
-                  console.log(`Dialog message: ${dialog.message()}`);
-                  dialog.dismiss().catch(() => {});
+            test.describe('When blog can be deleted', () => {
+                test('A blog can be deleted', async ({ page }) => {
+                    await page.goto('/')
+                    
+                    await page.locator('li').filter({ hasText: 'Título: Third blog titleView' }).getByRole('button').click();
+                    
+                    page.once('dialog', dialog => {
+                      console.log(`Dialog message: ${dialog.message()}`);
+                      dialog.dismiss().catch(() => {});
+                    });
+    
+                    await page.getByRole('button', { name: 'Delete' }).click();
+    
+                    await expect(page.locator('li').filter({ hasText: 'Título: Third blog titleView' })).toHaveCount(0);
                 });
 
-                await page.getByRole('button', { name: 'Delete' }).click();
+                test('A blog cant be deleted by another user', async ({ page }) => {
+                    await logOut(page)
 
-                await expect(page.locator('li').filter({ hasText: 'Título: Third blog titleView' })).toHaveCount(0);
-            });
+                    await loginWith(page, 'root', '123456789')
+                    await expect(page.getByText('Super saiyan logged-in')).toBeVisible()
+
+                    await page.goto('/')
+
+                    await page.locator('li').filter({ hasText: 'Título: First blog title' }).getByRole('button').click();
+
+                    const deleteButton = page.getByRole('button', { name: 'Delete' });
+                    await expect(deleteButton).not.toBeVisible();
+                });
+            })
         })
     })
 })

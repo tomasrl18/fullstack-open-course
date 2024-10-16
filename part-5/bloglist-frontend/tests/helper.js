@@ -9,6 +9,10 @@ const loginWith = async (page, username, password)  => {
     await page.getByRole('button', { name: 'Login' }).click()
 }
 
+const logOut = async (page) => {
+    await page.getByRole('button', { name: 'Logout' }).click()
+}
+
 const createBlog = async (page, title, author, url) => {
     await page.getByRole('button', { name: 'New blog' }).click()
 
@@ -21,4 +25,4 @@ const createBlog = async (page, title, author, url) => {
     await page.getByText(`Título: ${title}`).waitFor()
 }
   
-export { loginWith, createBlog }
+export { loginWith, logOut, createBlog }
