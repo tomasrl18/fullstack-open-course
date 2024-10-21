@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { newAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification, clearNotification } from '../reducers/notificationReducer'
+import { showNotification } from '../reducers/notificationReducer'
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
@@ -12,11 +12,7 @@ const AnecdoteForm = () => {
 
         dispatch(newAnecdote(content))
 
-        dispatch(setNotification(`Added "${content}"`))
-
-        setTimeout(() => {
-            dispatch(clearNotification())
-        }, "5000")
+        dispatch(showNotification(`Added: "${content}"`, 5))
     }
 
     const formStyle = {
