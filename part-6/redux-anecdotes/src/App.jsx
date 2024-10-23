@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+
+import { NotificationContextProvider } from './NotificationContext';
 
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
@@ -16,13 +19,15 @@ const App = () => {
   }, [])
 
   return (
-    <div>
-      <h2>Anecdotes</h2>
-      <Notification />
-      <AnecdoteFilter />
-      <AnecdoteList />
-      <AnecdoteForm />
-    </div>
+    <NotificationContextProvider>
+      <div>
+        <h2>Anecdotes</h2>
+        <Notification />
+        <AnecdoteFilter />
+        <AnecdoteList />
+        <AnecdoteForm />
+      </div>
+    </NotificationContextProvider>
   )
 }
 

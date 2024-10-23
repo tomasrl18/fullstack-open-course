@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from 'react-redux'
 import { increaseVotes } from '../reducers/anecdoteReducer'
+import { useNotification, setNotification } from '../NotificationContext'
 
 const Anecdote = ({ anecdote, handleClick }) => {
     const anecdoteStyle = {
@@ -62,6 +63,7 @@ const Anecdotes = () => {
     const dispatch = useDispatch()
     const anecdotes = useSelector(state => state.anecdotes)
     const filter = useSelector(state => state.filter)
+    const [, notificationDispatch] = useNotification();
 
     const filteredAnecdotes = anecdotes.filter(anecdote =>
         anecdote.content.toLowerCase().includes(filter.toLowerCase())
@@ -76,6 +78,12 @@ const Anecdotes = () => {
         margin: '0 auto',
     }
 
+    const handleVotes = (anecdote) => {
+        dispatch(increaseVotes(anecdote.id))
+
+        setNotification(notificationDispatch, `Anecdote: "${anecdote.content}" voted`, 5);
+    }
+
     return (
         <div style={containerStyle}>
             {[...filteredAnecdotes]
@@ -84,7 +92,7 @@ const Anecdotes = () => {
                     <Anecdote
                         key={anecdote.id}
                         anecdote={anecdote}
-                        handleClick={() => dispatch(increaseVotes(anecdote.id))}
+                        handleClick={() => handleVotes(anecdote)}
                     />
                 )
             }
