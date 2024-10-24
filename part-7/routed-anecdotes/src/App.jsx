@@ -75,23 +75,30 @@ const CreateNew = (props) => {
     })
   }
 
+  const reset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   return (
     <div>
       <h2>Create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           Content:&nbsp;
-          <input {...content} />
+          <input {...content.inputProps} />
         </div>
         <div>
           Author:&nbsp;
-          <input {...author} />
+          <input {...author.inputProps} />
         </div>
         <div>
           Url for more info:&nbsp;
-          <input {...info} />
+          <input {...info.inputProps} />
         </div>
-        <button>Create</button>
+        <button type='submit'>Create</button>
+        <button type='button' onClick={reset} style={{ marginLeft: '1rem' }}>Reset</button>
       </form>
     </div>
   )
