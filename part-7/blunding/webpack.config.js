@@ -7,6 +7,13 @@ const config = () => {
       path: path.resolve(__dirname, 'build'),
       filename: 'main.js'
     },
+    devServer: {
+      static: {
+          directory: path.resolve(__dirname, 'build'),
+      },
+      compress: true,
+      port: 3000,
+    },
     module: {
       rules: [
         {
