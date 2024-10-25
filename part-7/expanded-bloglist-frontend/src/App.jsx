@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBlogs, createBlog, likeBlog, removeBlog } from "./store/blogSlice";
 import { setNotification, clearNotification } from "./store/notificationSlice";
-import { fetchBlogs, createBlog } from "./store/blogSlice";
-import { useSelector } from "react-redux";
 
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
@@ -15,14 +14,15 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
+  const notification = useSelector((state) => state.notification);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
-
-  const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
 
   useEffect(() => {
     if (user) {
@@ -57,7 +57,9 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (e) {
-      dispatch(setNotification({ message: "Wrong credentials", type: "error" }));
+      dispatch(
+        setNotification({ message: "Wrong credentials", type: "error" }),
+      );
       removeMessage();
     }
   };
@@ -72,35 +74,31 @@ const App = () => {
 
     dispatch(createBlog(blogObject))
       .then(() => {
-        dispatch(setNotification({ message: `Added "${blogObject.title}"`, type: "success" }));
+        dispatch(
+          setNotification({
+            message: `Added "${blogObject.title}"`,
+            type: "success",
+          }),
+        );
         removeMessage();
       })
       .catch(() => {
-        dispatch(setNotification({ message: "An error occurred while adding the blog", type: "error" }));
+        dispatch(
+          setNotification({
+            message: "An error occurred while adding the blog",
+            type: "error",
+          }),
+        );
         removeMessage();
       });
   };
 
   const handleUpdateLikes = (id) => {
-    const blogToUpdate = blogs.find((blog) => blog.id === id);
-    const updatedBlog = {
-      ...blogToUpdate,
-      likes: blogToUpdate.likes + 1,
-    };
-
-    blogService
-      .update(id, updatedBlog)
-      .then((returnedBlog) => {
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    dispatch(likeBlog(id))
   };
 
   const handleDeleteBlog = (id) => {
-    blogService.destroy(id);
-    setBlogs(blogs.filter((blog) => blog.id !== id));
+    dispatch(removeBlog(id));
   };
 
   const removeMessage = () => {
@@ -149,8 +147,8 @@ const App = () => {
               key={blog.id}
               blog={blog}
               user={user}
-              handleUpdateLikes={handleUpdateLikes}
-              handleDeleteBlog={handleDeleteBlog}
+              handleUpdateLikes={() => handleUpdateLikes(blog.id)}
+              handleDeleteBlog={() => handleDeleteBlog(blog.id)}
             />
           ))}
       </div>

@@ -5,7 +5,7 @@ const BlogDetails = ({ blog, user, handleUpdateLikes, handleDeleteBlog }) => {
     if (
       window.confirm(`Do you really want to delete the blog "${blog.title}"?`)
     ) {
-      handleDeleteBlog(blog.id);
+      handleDeleteBlog();
     }
   };
 
@@ -14,7 +14,7 @@ const BlogDetails = ({ blog, user, handleUpdateLikes, handleDeleteBlog }) => {
       <li className="blogItem">
         <strong className="details">Likes: </strong> {blog.likes}
         <button
-          onClick={() => handleUpdateLikes(blog.id)}
+          onClick={handleUpdateLikes}
           style={{ marginLeft: "0.5rem" }}
         >
           Like
