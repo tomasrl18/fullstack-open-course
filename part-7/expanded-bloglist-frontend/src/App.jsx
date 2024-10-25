@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
+import { useDispatch } from "react-redux";
+import { setNotification, clearNotification } from "./store/notificationSlice";
+
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
@@ -14,13 +17,10 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState([
-    {
-      message: "",
-      type: "",
-    },
-  ]);
+
   const blogFormRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user) {
@@ -55,7 +55,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (e) {
-      setMessage({ message: "Wrong credentials", type: "error" });
+      dispatch(setNotification({ message: "Wrong credentials", type: "error" }));
       removeMessage();
     }
   };
@@ -73,19 +73,11 @@ const App = () => {
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
 
-        setMessage({
-          message: `Added "${returnedBlog.title}"`,
-          type: "success",
-        });
-
+        dispatch(setNotification({ message: `Added "${returnedBlog.title}"`, type: "success" }));
         removeMessage();
       })
       .catch(() => {
-        setMessage({
-          message: "An error occurred while adding the blog",
-          type: "error",
-        });
-
+        dispatch(setNotification({ message: "An error occurred while adding the blog", type: "error" }));
         removeMessage();
       });
   };
@@ -114,19 +106,14 @@ const App = () => {
 
   const removeMessage = () => {
     setTimeout(() => {
-      setMessage([
-        {
-          message: "",
-          type: "",
-        },
-      ]);
+      dispatch(clearNotification());
     }, 5000);
   };
 
   if (user === null) {
     return (
       <div>
-        <Notification message={message.message} type={message.type} />
+        <Notification />
         <Togglable buttonLabel="Login">
           <LoginForm
             username={username}
@@ -143,7 +130,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification message={message.message} type={message.type} />
+      <Notification />
       <div>
         <p>{user.name} logged-in</p>
         <button onClick={handleLogout} style={{ marginBottom: "1rem" }}>
