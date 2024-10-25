@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 
 import { useDispatch } from "react-redux";
 import { setNotification, clearNotification } from "./store/notificationSlice";
+import { fetchBlogs, createBlog } from "./store/blogSlice";
+import { useSelector } from "react-redux";
 
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
@@ -13,7 +15,6 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -21,12 +22,13 @@ const App = () => {
   const blogFormRef = useRef();
 
   const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
 
   useEffect(() => {
     if (user) {
-      blogService.getAll().then((blogs) => setBlogs(blogs));
+      dispatch(fetchBlogs());
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -68,12 +70,9 @@ const App = () => {
   const handleAddBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility();
 
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog));
-
-        dispatch(setNotification({ message: `Added "${returnedBlog.title}"`, type: "success" }));
+    dispatch(createBlog(blogObject))
+      .then(() => {
+        dispatch(setNotification({ message: `Added "${blogObject.title}"`, type: "success" }));
         removeMessage();
       })
       .catch(() => {
@@ -143,7 +142,7 @@ const App = () => {
           <BlogForm createBlog={handleAddBlog} />
         </Togglable>
 
-        {blogs
+        {[...blogs]
           .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
             <Blog

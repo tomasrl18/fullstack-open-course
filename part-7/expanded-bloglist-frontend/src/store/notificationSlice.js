@@ -13,9 +13,8 @@ const notificationSlice = createSlice({
       state.message = action.payload.message;
       state.type = action.payload.type;
     },
-    clearNotification: (state) => {
-      state.message = "";
-      state.type = "";
+    clearNotification() {
+      return { message: "", type: "" };
     },
   },
 });
