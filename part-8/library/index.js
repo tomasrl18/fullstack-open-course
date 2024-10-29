@@ -133,33 +133,13 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
-      /* let existingAuthor = authors.find(a => a.name === args.author)
+      let existingAuthor = authors.find(a => a.name === args.author)
       if (!existingAuthor) {
         existingAuthor = { name: args.author, id: uuid(), born: null }
-        authors.push(existingAuthor)
-      }
-      
-      const newBook = { ...args, id: uuid() }
-      books.push(newBook)
-      return newBook */
-
-      const { title, author, published, genres } = args
-
-      // Verificar si el autor ya existe
-      let existingAuthor = authors.find(a => a.name === author)
-      if (!existingAuthor) {
-        existingAuthor = { name: author, id: uuid(), born: null }
         authors = authors.concat(existingAuthor)
       }
 
-      // Crear y añadir el nuevo libro
-      const newBook = {
-        title,
-        published,
-        author,
-        id: uuid(),
-        genres
-      }
+      const newBook = { ...args, id: uuid() }
       books = books.concat(newBook)
       return newBook
     }
