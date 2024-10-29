@@ -17,11 +17,11 @@ let authors = [
     id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
     born: 1821
   },
-  { 
+  {
     name: 'Joshua Kerievsky',
     id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
   },
-  { 
+  {
     name: 'Sandi Metz',
     id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
@@ -55,7 +55,7 @@ let books = [
     author: 'Joshua Kerievsky',
     id: "afa5de01-344d-11e9-a414-719c6709cf3e",
     genres: ['refactoring', 'patterns']
-  },  
+  },
   {
     title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
     published: 2012,
@@ -83,7 +83,7 @@ const typeDefs = `
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: [String]): [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
 
@@ -108,23 +108,11 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      if (!args.author && !args.genre) {
-        return books
-      }
-
-      if (args.author) {
-        const byAuthor = (book) => book.author === args.author
-  
-        return books.filter(byAuthor)
-      }
-
-      if (args.genre) {
-        const byGenre = (book) => {
-          return book.genres.find(genre => genre.includes(args.genre))
-        }
-        
-        return books.filter(byGenre)
-      }
+      return books.filter(book => {
+        const byAuthor = args.author ? book.author === args.author : true
+        const byGenre = args.genre ? book.genres.includes(args.genre) : true
+        return byAuthor && byGenre
+      })
     },
     allAuthors: () => authors
   },
