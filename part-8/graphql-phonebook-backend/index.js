@@ -57,6 +57,10 @@ const typeDefs = `
       street: String!
       city: String!
     ): Person
+    editNumber(
+      name: String!
+      phone: String!
+    ): Person
   }
 `
 
@@ -67,7 +71,7 @@ const resolvers = {
       if (!args.phone) {
         return persons
       }
-      
+
       const byPhone = (person) =>
         args.phone === 'YES' ? person.phone : !person.phone
       
@@ -98,6 +102,16 @@ const resolvers = {
       const person = { ...args, id: uuid() }
       persons = persons.concat(person)
       return person
+    },
+    editNumber: (root, args) => {
+      const person = persons.find(p => p.name === args.name)
+      if (!person) {
+        return null
+      }
+  
+      const updatedPerson = { ...person, phone: args.phone }
+      persons = persons.map(p => p.name === args.name ? updatedPerson : p)
+      return updatedPerson
     }
   }
 }
