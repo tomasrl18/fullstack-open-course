@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types */
 import { gql, useQuery } from '@apollo/client';
 
 import Persons from './components/Persons'
+import PersonForm from './components/PersonForm';
 
 const ALL_PERSONS = gql`
 query {
@@ -21,7 +21,10 @@ const App = () => {
   }
 
   return (
-    <Persons persons = {result.data.allPersons}/>
+    <div>
+      <Persons persons = {result.data.allPersons}/>
+      <PersonForm />
+    </div>
   )
 }
 
