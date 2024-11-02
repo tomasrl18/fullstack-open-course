@@ -2,6 +2,8 @@
 import { ALL_AUTHORS } from "../queries"
 import { useQuery } from '@apollo/client';
 
+import BornForm from "./BornForm";
+
 const Authors = ({ show }) => {
   const authorsResult = useQuery(ALL_AUTHORS)
   
@@ -34,6 +36,7 @@ const Authors = ({ show }) => {
           ))}
         </tbody>
       </table>
+      <BornForm />
     </div>
   )
 }
