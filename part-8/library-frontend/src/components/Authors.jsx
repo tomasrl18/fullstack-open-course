@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 import { ALL_AUTHORS } from "../queries"
 import { useQuery } from '@apollo/client';
 
-/* eslint-disable react/prop-types */
 const Authors = ({ show }) => {
   const authorsResult = useQuery(ALL_AUTHORS)
   

@@ -1,9 +1,19 @@
-const Books = (props) => {
-  if (!props.show) {
+/* eslint-disable react/prop-types */
+import { ALL_BOOKS } from "../queries"
+import { useQuery } from '@apollo/client';
+
+const Books = ({ show }) => {
+  const booksResult = useQuery(ALL_BOOKS)
+  
+  if (booksResult.loading)  {
+    return <div>loading...</div>
+  }
+  
+  if (!show) {
     return null
   }
 
-  const books = []
+  const books = booksResult.data.allBooks
 
   return (
     <div>
