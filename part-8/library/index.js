@@ -1,6 +1,8 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
+const { GraphQLError } = require('graphql')
+
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/book')
@@ -154,24 +156,58 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      let author = await Author.findOne({ name: args.author })
-      if (!author) {
-        author = new Author({ name: args.author })
-        await author.save()
+      try {
+        let author = await Author.findOne({ name: args.author })
+        if (!author) {
+          author = new Author({ name: args.author })
+          await author.save()
+        }
+        
+        const book = new Book({ ...args, author: author._id })
+        await book.save()
+  
+        return book.populate('author')
+      } catch (error) {
+        if (error.name === 'ValidationError') {
+          throw new GraphQLError('Validation error: Invalid data to add a book', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              errorMessage: error.message
+            }
+          })
+        }
+        throw error
       }
-      
-      const book = new Book({ ...args, author: author._id })
-      await book.save()
-
-      return book.populate('author')
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({ name: args.name })
-      author.born = args.setBornTo
+      try {
+        const author = await Author.findOne({ name: args.name })
 
-      author.save()
+        if (!author) {
+          throw new GraphQLError('Author not found', {
+            extensions: { code: 'NOT_FOUND' }
+          })
+        }
 
-      return author
+        author.born = args.setBornTo
+
+        await author.save()
+
+        return author
+      } catch (error) {
+        if (error.name === 'ValidationError') {
+          throw new GraphQLError('Validation error: Invalid data to edit the author', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args,
+              errorMessage: error.message
+            }
+          })
+        }
+
+        throw error
+      }
     }
   }
 }
