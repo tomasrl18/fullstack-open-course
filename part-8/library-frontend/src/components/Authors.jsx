@@ -4,11 +4,13 @@ import { useQuery } from '@apollo/client';
 
 import BornForm from "./BornForm";
 
+import '../styles/auhors.css'
+
 const Authors = ({ show }) => {
   const authorsResult = useQuery(ALL_AUTHORS)
   
   if (authorsResult.loading)  {
-    return <div>loading...</div>
+    return <div className="loading">loading...</div>
   }
   
   if (!show) {
@@ -18,14 +20,14 @@ const Authors = ({ show }) => {
   const authors = authorsResult.data.allAuthors
 
   return (
-    <div>
-      <h2>authors</h2>
-      <table>
+    <div className="authors-container">
+      <h2 className="authors-title">Authors</h2>
+      <table className="authors-table">
         <tbody>
           <tr>
-            <th></th>
-            <th>born</th>
-            <th>books</th>
+            <th>Name</th>
+            <th>Born</th>
+            <th>Books</th>
           </tr>
           {authors.map((a) => (
             <tr key={a.name}>

@@ -1,0 +1,40 @@
+.books-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.books-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.books-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.books-table th,
+.books-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.books-table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.books-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #777;
+}
