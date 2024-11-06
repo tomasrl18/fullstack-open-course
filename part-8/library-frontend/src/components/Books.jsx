@@ -1,13 +1,33 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import { ALL_BOOKS } from "../queries"
 import { useQuery } from '@apollo/client';
 
 import '../styles/books.css'
 
 const Books = ({ show }) => {
-  const booksResult = useQuery(ALL_BOOKS)
+  const genres = [
+    {
+      name: 'Fantasy',
+      value: 'fantasy'
+    },
+    {
+      name: 'Romansy',
+      value: 'romansy'
+    },
+    {
+      name: 'All',
+      value: ''
+    }
+  ]
+  const [filteredGenre, setFilteredGenre] = useState('')
+
+  const { loading, data } = useQuery(ALL_BOOKS, {
+    variables: { genre: filteredGenre }
+  })
   
-  if (booksResult.loading)  {
+  if (loading)  {
     return <div>loading...</div>
   }
   
@@ -15,11 +35,24 @@ const Books = ({ show }) => {
     return null
   }
 
-  const books = booksResult.data.allBooks
+  const books = data.allBooks
 
   return (
     <div className="books-container">
       <h2 className="books-title">Books</h2>
+      <div className="genre-buttons">
+        {
+          genres.map((genre) => (
+            <button
+              key={genre.name}
+              className={`genre-button ${filteredGenre === genre.value ? 'active' : ''}`}
+              onClick={() => setFilteredGenre(genre.value)}
+            >
+              {genre.name}
+            </button>
+          ))
+        }
+      </div>
       <table className="books-table">
         <tbody>
           <tr>
