@@ -4,9 +4,9 @@ import { useQuery } from '@apollo/client';
 
 import BornForm from "./BornForm";
 
-import '../styles/auhors.css'
+import '../styles/authors.css'
 
-const Authors = ({ show }) => {
+const Authors = ({ show, token }) => {
   const authorsResult = useQuery(ALL_AUTHORS)
   
   if (authorsResult.loading)  {
@@ -38,7 +38,12 @@ const Authors = ({ show }) => {
           ))}
         </tbody>
       </table>
-      <BornForm />
+      {
+        token ?
+        <BornForm />
+        :
+        ''
+      }
     </div>
   )
 }

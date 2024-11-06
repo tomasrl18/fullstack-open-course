@@ -5,6 +5,8 @@ import { ALL_AUTHORS, EDIT_BORN } from '../queries'
 
 import Select from 'react-select';
 
+import '../styles/born-form.css'
+
 const BornForm = () => {
     const [name, setName] = useState('')
     const [born, setBorn] = useState('')
@@ -32,26 +34,30 @@ const BornForm = () => {
     }
     
     return (
-        <div>
-            <h2>Change born date</h2>
+        <div className="born-form-container">
+            <h2 className="form-title">Change Born Date</h2>
 
-            <form onSubmit={submit}>
-                <label>Author</label>
-                <Select
-                    value={authorOptions.find(option => option.value === name)}
-                    onChange={(selectedOption) => setName(selectedOption.value)}
-                    options={authorOptions}
-                    placeholder="Select author"
-                />
-                
-                <div>
-                Born <input
-                    type='number'
-                    value={born}
-                    onChange={({ target }) => setBorn(target.value)}
-                />
+            <form onSubmit={submit} className="born-form">
+                <div className="form-group">
+                    <label>Author</label>
+                    <Select
+                        value={authorOptions.find(option => option.value === name)}
+                        onChange={(selectedOption) => setName(selectedOption.value)}
+                        options={authorOptions}
+                        placeholder="Select author"
+                    />
                 </div>
-                <button type='submit'>Change born date</button>
+                
+                <div className="form-group">
+                    <label>Born</label>
+                    <input
+                        type='number'
+                        value={born}
+                        onChange={({ target }) => setBorn(target.value)}
+                        placeholder="Enter birth year"
+                    />
+                </div>
+                <button type='submit' className="submit-btn">Change born date</button>
             </form>
         </div>
     )
