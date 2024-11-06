@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
+import RecommendBook from "./components/RecommendBook";
+
 import { useApolloClient } from '@apollo/client';
 
 import './styles/app.css'
@@ -54,6 +57,13 @@ const App = () => {
               Add book
             </button>
             <button
+              onClick={() => setPage("recommend")}
+              className={`app-button`}
+              style={{ backgroundColor: page === "recommend" ? "#4CAF50" : "#555" }}
+            >
+              Recommend
+            </button>
+            <button
               onClick={logout}
               className="app-logout-button"
             >
@@ -76,6 +86,8 @@ const App = () => {
       <Books show={page === "books"} />
 
       <NewBook show={page === "add"} />
+
+      <RecommendBook show={page === "recommend"} />
 
       <LoginForm setToken={setToken} show={page === "login"} setPage={setPage}/>
     </div>

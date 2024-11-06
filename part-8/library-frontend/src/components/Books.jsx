@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ALL_BOOKS } from "../queries"
 import { useQuery } from '@apollo/client';
 
