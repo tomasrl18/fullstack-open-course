@@ -5,6 +5,8 @@ import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import { useApolloClient } from '@apollo/client';
 
+import './styles/app.css'
+
 const App = () => {
   const [token, setToken] = useState(null)
   const [page, setPage] = useState("authors");
@@ -24,18 +26,47 @@ const App = () => {
   }
 
   return (
-    <div>
-      <div>
-        <button onClick={() => setPage("authors")}>Authors</button>
-        <button onClick={() => setPage("books")}>Books</button>
+    <div className="app-container">
+      <div className="app-navbar">
+        <button
+          onClick={() => setPage("authors")}
+          className={`app-button`}
+          style={{ backgroundColor: page === "authors" ? "#4CAF50" : "#555" }}
+        >
+          Authors
+        </button>
+        <button
+          onClick={() => setPage("books")}
+          className={`app-button`}
+          style={{ backgroundColor: page === "books" ? "#4CAF50" : "#555" }}
+        >
+          Books
+        </button>
         {
           token ?
           <>
-            <button onClick={() => setPage("add")}>Add book</button>
-            <button onClick={logout}>logout</button>
+            <button
+              onClick={() => setPage("add")}
+              className={`app-button`}
+              style={{ backgroundColor: page === "add" ? "#4CAF50" : "#555" }}
+            >
+              Add book
+            </button>
+            <button
+              onClick={logout}
+              className="app-logout-button"
+            >
+              Logout
+            </button>
           </>
           :
-          <button onClick={() => setPage("login")}>Login</button>
+          <button
+            onClick={() => setPage("login")}
+            className="app-button"
+            style={{ backgroundColor: page === "login" ? "#4CAF50" : "#555" }}
+          >
+            Login
+          </button>
         }
       </div>
 

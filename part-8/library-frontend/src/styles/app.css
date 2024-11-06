@@ -1,0 +1,31 @@
+.app-container {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.app-navbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.app-button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.app-logout-button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    background-color: #e63946;
+    cursor: pointer;
+    font-size: 16px;
+}
