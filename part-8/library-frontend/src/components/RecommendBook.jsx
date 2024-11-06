@@ -19,7 +19,14 @@ const RecommendBook = ({ show }) => {
     }, [data]);
     
     const data_books = useQuery(ALL_BOOKS, {
-        variables: { genre: genre }
+        variables: { genre: genre },
+        update: (cache, response) => {
+            cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+              return {
+                allBooks: allBooks.concat(response.data.addPerson),
+              }
+            })
+        },
     })
 
     if (loading) return <p className="loading">Loading...</p>;
