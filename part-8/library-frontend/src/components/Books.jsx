@@ -13,8 +13,8 @@ const Books = ({ show }) => {
       value: 'fantasy'
     },
     {
-      name: 'Romansy',
-      value: 'romansy'
+      name: 'Romantasy',
+      value: 'romantasy'
     },
     {
       name: 'All',
