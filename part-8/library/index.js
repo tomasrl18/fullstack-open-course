@@ -149,6 +149,7 @@ const typeDefs = `
 
     createUser(
       username: String!
+      favoriteGenre: String!
     ): User
 
     login(
@@ -164,7 +165,7 @@ const resolvers = {
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       if (!args.genre) {
-        return Book.find({})
+        return Book.find({}).populate('author')
       }
 
       return Book.find({ genres: args.genre }).populate('author')
@@ -255,7 +256,7 @@ const resolvers = {
       }
     },
     createUser: async (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
 
       return user.save()
         .catch(error => {
