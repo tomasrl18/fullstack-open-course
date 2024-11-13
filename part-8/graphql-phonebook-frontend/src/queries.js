@@ -1,13 +1,24 @@
 import { gql } from '@apollo/client'
 
-export const ALL_PERSONS = gql`
-  query {
-    allPersons  {
-      name
-      phone
-      id
+const PERSON_DETAILS = gql`
+  fragment PersonDetails on Person {
+    id
+    name
+    phone 
+    address {
+      street 
+      city
     }
   }
+`
+
+export const ALL_PERSONS = gql`
+  {
+    allPersons  {
+      ...PersonDetails
+    }
+  }
+  ${PERSON_DETAILS}  
 `
 
 export const CREATE_PERSON = gql`
