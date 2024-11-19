@@ -8,32 +8,7 @@ interface Result {
     ratingDescription: string,
 }
 
-interface Arguments {
-    goal: number;
-    diaryHours: number[];
-}
-
-const parseArgs = (args: string[]): Arguments => {
-    if (args.length < 12) throw new Error('Not enough arguments');
-    if (args.length > 12) throw new Error('Too many arguments');
-
-    let parsedDiaryHours = [];
-
-    for (let i = 3; i < args.length; i++) {
-        parsedDiaryHours.push(Number(args[i]))
-    }
-
-    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-        return {
-            goal: Number(args[2]),
-            diaryHours: parsedDiaryHours
-        }
-    } else {
-        throw new Error('Provided values were not numbers!');
-    }
-}
-
-const calculateExercises = (diaryHours: number[], goal: number): Result => {
+export const calculateExercises = (diaryHours: number[], goal: number): Result => {
     let trainingDays = calculateTrainingDays(diaryHours);
     let avgExercised = calculateAvgExercised(diaryHours);
     let success = calculateSuccess(avgExercised, goal);
@@ -92,6 +67,7 @@ const calculateRating = (avgExercised: number): number => {
     return 2;
 }
 
+//@ts-ignore
 const calculateRatingDescription = (rating: number, goal: number): string => {
     if (rating === 1) {
         return 'Not enough, you can do it better'
@@ -104,15 +80,4 @@ const calculateRatingDescription = (rating: number, goal: number): string => {
     if (rating === 3) {
         return 'Very good!!, keep it up'
     }
-}
-
-try {
-    const { diaryHours, goal } = parseArgs(process.argv);
-    console.log(calculateExercises(diaryHours, goal));
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
-    }
-    console.log(errorMessage);
 }
