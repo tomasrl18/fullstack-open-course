@@ -1,70 +1,68 @@
-interface Values {
+import express from 'express';
+
+interface Args {
     mass: number;
     height: number;
+    bmi: string;
 }
 
-const parseArguments = (args: string[]): Values => {
-    if (args.length < 4) throw new Error('Not enough arguments');
-    if (args.length > 4) throw new Error('Too many arguments');
+interface Error {
+    error: string;
+}
 
-    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+const calculateBmi = (mass: number, height: number): Args | Error => {
+    if (isNaN(height) || isNaN(mass)) {
         return {
-            mass: Number(args[2]),
-            height: Number(args[3])
+            error: "malformatted parameters"
         }
-    } else {
-        throw new Error('Provided values were not numbers!');
     }
-}
-
-const calculateBmi = (mass: number, height: number) => {
+    
     let heightMeter = height / 100;
     let heightSquare = heightMeter * heightMeter;
     
     let calculation: number = (mass / heightSquare);
 
     if (calculation < 18.5) {
-        console.log('Low weight');
+        return {
+            mass: mass,
+            height: height,
+            bmi: "Low weight"
+        }
     }
 
     if (calculation >= 18.5 && calculation <= 24.99) {
-        console.log('Normal (healthy weight)');
+        return {
+            mass,
+            height,
+            bmi: "Normal (healthy weight)"
+        }
     }
 
     if (calculation >= 25) {
-        console.log('Overweight');
+        return {
+            mass,
+            height,
+            bmi: "Overweight"
+        }
+    }
+
+    return {
+        mass: 0,
+        height: 0,
+        bmi: "Not provided args"
     }
 }
 
-try {
-    const { mass, height } = parseArguments(process.argv);
-    calculateBmi(mass, height);
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
-    }
-    console.log(errorMessage);
-}
+const app = express();
 
-
-/* const calculateBmi = (mass: number, height: number) => {
-    let heightMeter = height / 100;
-    let heightSquare = heightMeter * heightMeter;
+app.get('/bmi', (_req, res) => {
+    const { height, mass } = _req.query;
     
-    let calculation: number = (mass / heightSquare);
+    res.send(calculateBmi(Number(mass), Number(height)));
+});
 
-    if (calculation < 18.5) {
-        return 'Low weight'
-    }
+const PORT = 3003;
 
-    if (calculation >= 18.5 && calculation <= 24.99) {
-        return 'Normal (healthy weight)'
-    }
-
-    if (calculation >= 25) {
-        return 'Overweight'
-    }
-}
-
-console.log(calculateBmi(80, 175)); */
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
